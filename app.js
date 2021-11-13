@@ -158,5 +158,9 @@ function slider() {
 //To update duration of audio
 function updateDuration(){
   console.log('changed')
-  console.log(track.currentTime)
+  console.log(track.duration * 5)
+  console.log(durationSlider.value)
+  let sliderPosition = track.duration * (durationSlider.value / 100)
+  track.currentTime = sliderPosition;
+  
 }
