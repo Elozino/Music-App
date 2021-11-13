@@ -58,9 +58,13 @@ body {
 
 .music-info {
   text-align: center;
-  img{
-    width: 80%;
-    margin-top: 30px;
+  .track-img{
+    img{
+      width: 80%;
+      max-height: 300px;
+      margin-top: 30px;
+      object-fit: contain;
+    }
   }
   h2{
     margin: 10px 0;
@@ -117,6 +121,15 @@ body {
   span {
     font-size: 32px;
     margin-right: 10px;
+  }
+}
+.volume{
+  @include flex(flex, center, center);
+  *{
+    margin-right: 10px;
+  }
+  .speaker-volume{
+    font-size: 20px;
   }
 }
 
