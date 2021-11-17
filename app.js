@@ -3,7 +3,7 @@ const home = document.querySelector(".home");
 const menu = document.querySelector(".menu");
 const close = document.querySelector(".close");
 const playlists = document.querySelector(".playlists");
-
+const playlistItem = document.querySelector(".playlist-item");
 //Song Info
 const trackImage = document.querySelector(".track-image");
 const songTitle = document.querySelector(".song-title");
@@ -27,14 +27,6 @@ const durationSlider = document.querySelector(".duration-slider");
 console.log(durationTimer);
 console.log(currentTimer);
 console.log(durationSlider);
-
-//To open and close playlist section
-menu.addEventListener("click", () => {
-  playlists.style.left = "0";
-});
-close.addEventListener("click", () => {
-  playlists.style.left = "-100%";
-});
 
 //Creating a track list
 let trackList = [
@@ -64,12 +56,10 @@ let trackList = [
   },
 ];
 
-
 let indexOfTrack = 0;
 let timer = 0;
 let track = document.createElement("audio");
 let isPlaying = false;
-
 
 //EventListeners
 play.addEventListener("click", playAndPause);
@@ -79,7 +69,6 @@ speaker.addEventListener("click", mute);
 speakerControl.addEventListener("change", slider);
 durationSlider.addEventListener("change", updateDuration);
 track.addEventListener("timeupdate", updateSongTime);
-
 
 //Load Tracks
 function loadTracks(indexTrack) {
@@ -94,7 +83,6 @@ function loadTracks(indexTrack) {
 }
 loadTracks(indexOfTrack);
 
-
 //Play and Paused tracks
 function playAndPause() {
   if (isPlaying == false) {
@@ -104,7 +92,6 @@ function playAndPause() {
   }
 }
 
-
 //Play tracks
 function playSong() {
   track.play();
@@ -112,14 +99,12 @@ function playSong() {
   play.innerHTML = '<i class="fas fa-pause"></i>';
 }
 
-
 //Pause tracks
 function pauseSong() {
   track.pause();
   isPlaying = false;
   play.innerHTML = '<i class="fas fa-play"></i>';
 }
-
 
 //Next Song
 function nextSong() {
@@ -134,7 +119,6 @@ function nextSong() {
   }
 }
 
-
 //Previous song
 function prevSong() {
   if (indexOfTrack > 0) {
@@ -148,23 +132,22 @@ function prevSong() {
   }
 }
 
-
 //To mute sound
 function mute() {
   track.volume = 0;
   speakerVolume.innerHTML = 0;
   speakerControl.value = 0;
+  speaker.innerHTML = '<i class="fas fa-volume-mute"></i>'
   console.log(speaker);
 }
-
 
 //To change volume with the slider
 function slider() {
   speakerVolume.value = speakerControl.value;
   track.volume = speakerControl.value / 100;
   speakerVolume.innerHTML = Math.round(track.volume * 100);
+  speaker.innerHTML = '<i class="fas fas fa-volume-up"></i>'
 }
-
 
 //To update duration of audio
 function updateDuration() {
@@ -175,12 +158,10 @@ function updateDuration() {
   track.currentTime = sliderPosition;
 }
 
-
 //To reset the slider so when a song is played the prev is cleared
 function resetSlider() {
   durationSlider.value = 0;
 }
-
 
 //Making the slider move with the song track
 function updateSlider() {
@@ -205,7 +186,6 @@ function updateSlider() {
   }
 }
 
-
 //Update current song time
 function updateSongTime() {
   if (track.duration) {
@@ -218,22 +198,63 @@ function updateSongTime() {
     let durationSec = Math.floor(track.duration - durationMin * 60); //To get the current sec
 
     if (durationMin < 10) {
-      durationMin = `0${durationMin}`
+      durationMin = `0${durationMin}`;
     }
     if (durationSec < 10) {
-      durationSec = `0${durationSec}`
+      durationSec = `0${durationSec}`;
     }
     if (currentMin < 10) {
-      currentMin = `0${currentMin}`
+      currentMin = `0${currentMin}`;
     }
     if (currentSec < 10) {
-      currentSec = `0${currentSec}`
-    } 
-    currentTimer.innerHTML = `${currentMin}:${currentSec}`
-    durationTimer.innerHTML = `${durationMin}:${durationSec}`
+      currentSec = `0${currentSec}`;
+    }
+    currentTimer.innerHTML = `${currentMin}:${currentSec}`;
+    durationTimer.innerHTML = `${durationMin}:${durationSec}`;
+  } else {
+    currentTimer.innerHTML = `00:00`;
+    durationTimer.innerHTML = `00:00`;
   }
-  else{
-    currentTimer.innerHTML = `00:00`
-    durationTimer.innerHTML = `00:00`
-  }
+}
+
+//To open and close playlist section
+menu.addEventListener("click", () => {
+  playlists.style.left = "0";
+});
+close.addEventListener("click", () => {
+  playlists.style.left = "-100%";
+});
+
+let counter = 1;
+function displayTracks() {
+  let counter = 1;
+  trackList.forEach((tracks) => {
+    // console.log(tracks.name);
+    let div = document.createElement("div");
+    div.classList.add("music-playlist");
+    div.innerHTML = `
+      <span class="song-index">${counter++}</span>
+      <p class="song-name">${tracks.name}</p>
+    `;
+    playlistItem.appendChild(div);
+  });
+  playFromPlaylist();
+}
+displayTracks();
+
+//Play song from playlist
+function playFromPlaylist() {
+  playlistItem.addEventListener("click", (e) => {
+    if (e.target.classList.contains("song-name")) {
+      // alert(e.target.innerHTML) //We used innerHTML because we want to access it as an html file and not its textContent
+      const indexNum = trackList.findIndex((item) => {
+        if (item.name === e.target.innerHTML) {
+          return true;
+        }
+      });
+      loadTracks(indexNum)
+      playSong()
+      playlists.style.left = "-100%"; //To hide the playlist
+    }
+  });
 }

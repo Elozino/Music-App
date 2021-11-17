@@ -1,3 +1,4 @@
+@import url("https://fonts.googleapis.com/css2?family=Roboto:wght@300&display=swap");
 /* SCSS Variables */
 * {
   margin: 0;
@@ -9,7 +10,7 @@
 body {
   background-color: #1a011f;
   color: #f7ddfc;
-  font-family: Arial, Helvetica, sans-serif;
+  font-family: 'Roboto', sans-serif;
 }
 
 /*General Styles*/
@@ -202,5 +203,36 @@ body {
 
 .music-playlist span {
   margin-right: 30px;
+}
+
+@media screen and (max-width: 414px) {
+  .music-info .track-img img {
+    width: 80%;
+    max-height: 200px;
+    margin-top: 30px;
+    -o-object-fit: contain;
+       object-fit: contain;
+  }
+  .control-btn {
+    margin-bottom: 20px;
+  }
+  .control-btn button {
+    text-align: center;
+    padding: 10px;
+    margin: 0 10px;
+  }
+  .control-btn button i {
+    font-size: 26px;
+  }
+  .playall {
+    margin-bottom: 10px;
+    padding: 5px 10px;
+  }
+  .playall span {
+    font-size: 26px;
+  }
+  .playall i {
+    font-size: 23px;
+  }
 }
 /*# sourceMappingURL=style.css.map */
