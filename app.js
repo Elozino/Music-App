@@ -22,9 +22,9 @@ const playall = document.querySelector(".playall");
 
 //Song duration
 const currentTimer = document.querySelector(".current-time");
-const durationTime = document.querySelector(".duration-time");
+const durationTimer = document.querySelector(".duration-time");
 const durationSlider = document.querySelector(".duration-slider");
-console.log(durationTime);
+console.log(durationTimer);
 console.log(currentTimer);
 console.log(durationSlider);
 
@@ -64,6 +64,13 @@ let trackList = [
   },
 ];
 
+
+let indexOfTrack = 0;
+let timer = 0;
+let track = document.createElement("audio");
+let isPlaying = false;
+
+
 //EventListeners
 play.addEventListener("click", playAndPause);
 next.addEventListener("click", nextSong);
@@ -71,11 +78,8 @@ prev.addEventListener("click", prevSong);
 speaker.addEventListener("click", mute);
 speakerControl.addEventListener("change", slider);
 durationSlider.addEventListener("change", updateDuration);
+track.addEventListener("timeupdate", updateSongTime);
 
-let indexOfTrack = 0;
-let timer = 0;
-let track = document.createElement("audio");
-let isPlaying = false;
 
 //Load Tracks
 function loadTracks(indexTrack) {
@@ -86,10 +90,10 @@ function loadTracks(indexTrack) {
   songTitle.textContent = trackList[indexTrack].name;
   artisteName.TextContent = trackList[indexTrack].artiste;
   track.load();
-
   timer = setInterval(updateSlider, 1000);
 }
 loadTracks(indexOfTrack);
+
 
 //Play and Paused tracks
 function playAndPause() {
@@ -100,6 +104,7 @@ function playAndPause() {
   }
 }
 
+
 //Play tracks
 function playSong() {
   track.play();
@@ -107,12 +112,14 @@ function playSong() {
   play.innerHTML = '<i class="fas fa-pause"></i>';
 }
 
+
 //Pause tracks
 function pauseSong() {
   track.pause();
   isPlaying = false;
   play.innerHTML = '<i class="fas fa-play"></i>';
 }
+
 
 //Next Song
 function nextSong() {
@@ -127,6 +134,7 @@ function nextSong() {
   }
 }
 
+
 //Previous song
 function prevSong() {
   if (indexOfTrack > 0) {
@@ -140,6 +148,7 @@ function prevSong() {
   }
 }
 
+
 //To mute sound
 function mute() {
   track.volume = 0;
@@ -148,12 +157,14 @@ function mute() {
   console.log(speaker);
 }
 
+
 //To change volume with the slider
 function slider() {
   speakerVolume.value = speakerControl.value;
   track.volume = speakerControl.value / 100;
   speakerVolume.innerHTML = Math.round(track.volume * 100);
 }
+
 
 //To update duration of audio
 function updateDuration() {
@@ -164,10 +175,12 @@ function updateDuration() {
   track.currentTime = sliderPosition;
 }
 
+
 //To reset the slider so when a song is played the prev is cleared
 function resetSlider() {
   durationSlider.value = 0;
 }
+
 
 //Making the slider move with the song track
 function updateSlider() {
@@ -181,13 +194,46 @@ function updateSlider() {
   if (track.ended) {
     play.innerHTML = '<i class="fas fa-play"></i>';
     if (indexOfTrack < trackList.length - 1) {
-      indexOfTrack++
+      indexOfTrack++;
       loadTracks(indexOfTrack);
-      playSong()
-    } else if(indexOfTrack == trackList.length){
-      indexOfTrack = 0
+      playSong();
+    } else if (indexOfTrack == trackList.length) {
+      indexOfTrack = 0;
       loadTracks(indexOfTrack);
-      playSong()
+      playSong();
     }
+  }
+}
+
+
+//Update current song time
+function updateSongTime() {
+  if (track.duration) {
+    //Creating for current min and sec
+    let currentMin = Math.floor(track.currentTime / 60); //To get the current min
+    let currentSec = Math.floor(track.currentTime - currentMin * 60); //To get the current sec
+
+    //creating the duration min and sec
+    let durationMin = Math.floor(track.duration / 60); //To get the current min
+    let durationSec = Math.floor(track.duration - durationMin * 60); //To get the current sec
+
+    if (durationMin < 10) {
+      durationMin = `0${durationMin}`
+    }
+    if (durationSec < 10) {
+      durationSec = `0${durationSec}`
+    }
+    if (currentMin < 10) {
+      currentMin = `0${currentMin}`
+    }
+    if (currentSec < 10) {
+      currentSec = `0${currentSec}`
+    } 
+    currentTimer.innerHTML = `${currentMin}:${currentSec}`
+    durationTimer.innerHTML = `${durationMin}:${durationSec}`
+  }
+  else{
+    currentTimer.innerHTML = `00:00`
+    durationTimer.innerHTML = `00:00`
   }
 }
