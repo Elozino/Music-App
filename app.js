@@ -26,8 +26,7 @@ const durationTime = document.querySelector(".duration-time");
 const durationSlider = document.querySelector(".duration-slider");
 console.log(durationTime);
 console.log(currentTimer);
-console.log(durationSlider)
-
+console.log(durationSlider);
 
 //To open and close playlist section
 menu.addEventListener("click", () => {
@@ -36,8 +35,6 @@ menu.addEventListener("click", () => {
 close.addEventListener("click", () => {
   playlists.style.left = "-100%";
 });
-
-
 
 //Creating a track list
 let trackList = [
@@ -67,7 +64,6 @@ let trackList = [
   },
 ];
 
-
 //EventListeners
 play.addEventListener("click", playAndPause);
 next.addEventListener("click", nextSong);
@@ -83,11 +79,15 @@ let isPlaying = false;
 
 //Load Tracks
 function loadTracks(indexTrack) {
+  clearInterval(timer);
+  resetSlider();
   track.src = trackList[indexTrack].path;
   trackImage.src = trackList[indexTrack].img;
   songTitle.textContent = trackList[indexTrack].name;
   artisteName.TextContent = trackList[indexTrack].artiste;
   track.load();
+
+  timer = setInterval(updateSlider, 1000);
 }
 loadTracks(indexOfTrack);
 
@@ -148,7 +148,7 @@ function mute() {
   console.log(speaker);
 }
 
-//To change volume with th slider
+//To change volume with the slider
 function slider() {
   speakerVolume.value = speakerControl.value;
   track.volume = speakerControl.value / 100;
@@ -156,11 +156,38 @@ function slider() {
 }
 
 //To update duration of audio
-function updateDuration(){
-  console.log('changed')
-  console.log(track.duration * 5)
-  console.log(durationSlider.value)
-  let sliderPosition = track.duration * (durationSlider.value / 100)
+function updateDuration() {
+  // console.log('changed')
+  // console.log(track.duration * 5)
+  // console.log(durationSlider.value)
+  let sliderPosition = track.duration * (durationSlider.value / 100);
   track.currentTime = sliderPosition;
-  
+}
+
+//To reset the slider so when a song is played the prev is cleared
+function resetSlider() {
+  durationSlider.value = 0;
+}
+
+//Making the slider move with the song track
+function updateSlider() {
+  let position = 0;
+
+  if (!isNaN(track.duration)) {
+    position = track.currentTime * (100 / track.duration);
+    durationSlider.value = position;
+    //Recall in the update slider func we did an arithmetic in term of 0-1 that is why this is like this so it can correspond
+  }
+  if (track.ended) {
+    play.innerHTML = '<i class="fas fa-play"></i>';
+    if (indexOfTrack < trackList.length - 1) {
+      indexOfTrack++
+      loadTracks(indexOfTrack);
+      playSong()
+    } else if(indexOfTrack == trackList.length){
+      indexOfTrack = 0
+      loadTracks(indexOfTrack);
+      playSong()
+    }
+  }
 }
