@@ -10,7 +10,7 @@
 body {
   background-color: #1a011f;
   color: #f7ddfc;
-  font-family: 'Roboto', sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 /*General Styles*/
@@ -206,12 +206,41 @@ body {
 }
 
 @media screen and (max-width: 414px) {
+  .fas {
+    font-size: 22px;
+  }
+  .app-header,
+  .playlist-header {
+    margin: 10px 0;
+  }
+  .app-header h2,
+  .playlist-header h2 {
+    font-size: 22px;
+  }
   .music-info .track-img img {
     width: 80%;
     max-height: 200px;
-    margin-top: 30px;
+    margin-top: 10px;
     -o-object-fit: contain;
        object-fit: contain;
+  }
+  .music-info h2 {
+    margin: 3px 0;
+    font-size: 18px;
+  }
+  .music-info p {
+    font-size: 14px;
+  }
+  .controls {
+    border-radius: 50px 50px 0 0;
+    margin-top: 20px;
+    padding: 15px 0;
+    width: 90%;
+    font-size: 14px;
+  }
+  .duration-slide input {
+    width: 80%;
+    margin: 10px 0;
   }
   .control-btn {
     margin-bottom: 20px;
